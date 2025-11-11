@@ -5,7 +5,7 @@
 // 
 // Create Date: 11/02/2025 02:09:44 PM
 // Design Name: 
-// Module Name: sevenSegDigit
+// Module Name: SevenSegDigit
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
