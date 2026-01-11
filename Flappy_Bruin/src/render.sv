@@ -80,9 +80,9 @@ module render(
         .reset(reset),
         .game_start(game_start),
         
-        .random_in(9'b110_010_101),
+        .random_in(9'b010_011_110),
         
-        .initial_x(490),
+        .initial_x(440),
         .set_x(640),
         .x_bar(x_bar_arr[1]),
         .y_gap(y_gap_arr[1]),
@@ -96,9 +96,9 @@ module render(
         .reset(reset),
         .game_start(game_start),
         
-        .random_in(9'b101_111_000),
+        .random_in(9'b101_001_110),
         
-        .initial_x(340),
+        .initial_x(240),
         .set_x(640),
         .x_bar(x_bar_arr[2]),
         .y_gap(y_gap_arr[2]),
@@ -134,33 +134,37 @@ module render(
             // Collision detection
             if ((bruin_x+bruin_width/2 >= x_bar_arr[0]-bar_width) &&
                 (bruin_x-bruin_width/2 <= x_bar_arr[0]) && 
-                ((bruin_y < (y_gap_arr[0]-width_gap/2)) ||
-                (bruin_y > (y_gap_arr[0]+width_gap/2)))) begin
+                (((bruin_y-bruin_high/2) <= (y_gap_arr[0]-width_gap/2)) ||
+                ((bruin_y+bruin_high/2) >= (y_gap_arr[0]+width_gap/2)))) begin
                 lose <= 1'b1;
             end else if ((bruin_x+bruin_width/2 >= x_bar_arr[1]-bar_width) &&
                 (bruin_x-bruin_width/2 <= x_bar_arr[1]) && 
-                ((bruin_y < (y_gap_arr[1]-width_gap/2)) ||
-                (bruin_y > (y_gap_arr[1]+width_gap/2))) && !lose) begin
+                (((bruin_y-bruin_high/2) <= (y_gap_arr[1]-width_gap/2)) ||
+                ((bruin_y+bruin_high/2) >= (y_gap_arr[1]+width_gap/2))) && !lose) begin
                 lose <= 1'b1;
-            end else if ((bruin_x+bruin_width/2 >= x_bar_arr[2]-bar_width) &&
+            end 
+            else if ((bruin_x+bruin_width/2 >= x_bar_arr[2]-bar_width) &&
                 (bruin_x-bruin_width/2 <= x_bar_arr[2]) && 
-                ((bruin_y < (y_gap_arr[2]-width_gap/2)) ||
-                (bruin_y > (y_gap_arr[2]+width_gap/2))) && !lose) begin
+                (((bruin_y-bruin_high/2) <= (y_gap_arr[2]-width_gap/2)) ||
+                ((bruin_y+bruin_high/2) >= (y_gap_arr[2]+width_gap/2))) && !lose) begin
                 lose <= 1'b1;
             end
             // Scoring
             else if ((bruin_x-bruin_width/2) > x_bar_arr[0] && bruin_y > (y_gap_arr[0]-width_gap/2) 
                     && bruin_y < (y_gap_arr[0]+width_gap/2) && cnt_en_bar1 && !lose) begin
                 cnt_en_bar1 <= 1'b0;
-                score <= score + 1;
+                if (score >= 5) score <= score + 2;
+                else score <= score + 1;
             end else if ((bruin_x-bruin_width/2) > x_bar_arr[1] && bruin_y > (y_gap_arr[1]-width_gap/2) 
                     && bruin_y < (y_gap_arr[1]+width_gap/2) && cnt_en_bar2 && !lose) begin
                 cnt_en_bar2 <= 1'b0;
-                score <= score + 1;
+                if (score >= 5) score <= score + 2;
+                else score <= score + 1;
             end else if ((bruin_x-bruin_width/2) > x_bar_arr[2] && bruin_y > (y_gap_arr[2]-width_gap/2) 
                     && bruin_y < (y_gap_arr[2]+width_gap/2) && cnt_en_bar3 && !lose) begin
                 cnt_en_bar3 <= 1'b0;
-                score <= score + 1;
+                if (score >= 5) score <= score + 2;
+                else score <= score + 1;
             end 
         end
     end
@@ -169,9 +173,6 @@ module render(
         if (reset)begin
            rgb_reg <= sky;
         end else begin
-           //if (lose) begin
-              //score <= '0;
-           //end else 
            if (score_on) begin
                 rgb_reg <= score_rgb;
             // Rendering Bruin

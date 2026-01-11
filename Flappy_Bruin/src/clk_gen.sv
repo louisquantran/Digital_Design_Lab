@@ -50,7 +50,7 @@ module clk_gen(
         end else begin
             if (c_5Hz == max_5Hz) begin
                 c_5Hz   <= 24'd0;
-                clk_5Hz <= ~clk_5Hz;   // toggle every 0.1 s → 5 Hz
+                clk_5Hz <= ~clk_5Hz;   // toggle every 0.1 s -> 5 Hz
             end else begin
                 c_5Hz <= c_5Hz + 1'b1;
             end
